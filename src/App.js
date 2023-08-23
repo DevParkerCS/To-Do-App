@@ -1,18 +1,17 @@
-import Form from "./Components/Form/Form";
-import RenderTodos from "./Components/RenderTodos/RenderTodos";
-import AppFooter from "./Components/AppFooter/AppFooter";
-import styles from "./App.module.css";
-import { useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import './App.css'
+import { Home } from "./pages/Home/Home";
 
 function App() {
-  const [todos, setTodos] = useState(["Learn Javascript", "Learn React"]);
   return (
-    <div className={styles.appWrapper}>
-      <h1>THINGS TO DO</h1>
-      <Form setTodos={setTodos}></Form>
-      <RenderTodos todos={todos}></RenderTodos>
-      <AppFooter todos={todos}></AppFooter>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+
+        <Route path="/todo/new" element={<h1>New Todo</h1>} />
+        <Route path="/todo/delete" element={<h1>Delete Todo</h1>} />
+      </Routes>
+    </Router>
   );
 }
 

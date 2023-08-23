@@ -1,16 +1,15 @@
 import { useState } from "react";
 import styles from "./Form.module.css";
 
-const Form = ({ setTodos }) => {
+const Form = ({ createTodo }) => {
   const [inputValue, setInputValue] = useState("");
 
   const formSubmitHandler = (e) => {
     e.preventDefault();
+    console.log(e.target);
     if (e.target[0].value !== "") {
-      setTodos((prevState) => {
-        setInputValue("");
-        return [...prevState, e.target[0].value];
-      });
+      setInputValue("");
+      createTodo(e.target[0].value)
     }
   };
 

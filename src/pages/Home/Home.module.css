@@ -1,0 +1,11 @@
+.appWrapper {
+    width: 95vw;
+    margin: auto;
+    margin-top: 1rem;
+    background-color: white;
+    padding: 1rem;
+}
+
+h1 {
+    text-align: center;
+}

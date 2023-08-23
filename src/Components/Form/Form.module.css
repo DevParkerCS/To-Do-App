@@ -1,0 +1,12 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.form__input{
+    display: block;
+    padding: .5rem;
+    width: 95%;
+    margin: 0 auto;
+}

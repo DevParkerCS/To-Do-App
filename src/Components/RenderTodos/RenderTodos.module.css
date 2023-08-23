@@ -1,0 +1,21 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.renderedTodos{
+    list-style: none;
+    padding-left: 0;
+}
+
+.todo{
+    width: 95%;
+    border-bottom: 2px solid rgba(211, 211, 211, 0.5);
+    margin: 0 auto;
+    padding: .5rem 0rem;
+}
+
+.todo__check{
+    margin-right: .6rem;
+}

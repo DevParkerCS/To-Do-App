@@ -9,3 +9,8 @@
 h1 {
     text-align: center;
 }
+
+.invalidInput {
+    border: 2px solid rgba(255, 0, 0, 0.8);
+    box-shadow: 2px 2px 0 red;
+}

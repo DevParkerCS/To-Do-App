@@ -1,6 +1,6 @@
-import Form from "../../Components/Form/Form";
-import RenderTodos from "../../Components/RenderTodos/RenderTodos";
-import AppFooter from "../../Components/AppFooter/AppFooter";
+import Form from "./NewTaskForm";
+import RenderTodos from "./Todos";
+import AppFooter from "./AppFooter";
 import styles from './Home.module.css'
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -9,8 +9,10 @@ const apiDomain = "http://localhost:8000"
 
 export const Home = () => {
     const [todos, setTodos] = useState(null);
+    const [renderRule, setRenderRule] = useState('all')
     const [apiError, setApiError] = useState(null);
     const [isCreatingTask, setIsCreatingTask] = useState(false);
+    const [validInput, setValidInput] = useState(true)
 
     useEffect(() => {
         getTodos();
@@ -33,8 +35,24 @@ export const Home = () => {
     const getTodos = async () => {
         try {
             const { data } = await axios.get(`${apiDomain}/todo/all`, { withCredentials: true })
-
-            setTodos(data.todos)
+            const todos = []
+            if (renderRule === 'completed') {
+                for (let dataPoint of data) {
+                    if (dataPoint.isCompleted) {
+                        todos.push(dataPoint)
+                    }
+                }
+            } else if (renderRule === 'active') {
+                for (let dataPoint of data) {
+                    if (!dataPoint.isCompleted) {
+                        todos.push(dataPoint)
+                    }
+                }
+            } else {
+                setTodos(data)
+                return
+            }
+            setTodos(todos)
         } catch (err) {
             console.log({ err });
         }
@@ -51,8 +69,7 @@ export const Home = () => {
                 return t
             }
         })
-
-        setTodos(newTodos);
+        setTodos(newTodos)
     }
 
     if (!todos) {
@@ -60,15 +77,15 @@ export const Home = () => {
     }
 
     return (
-        <div className={styles.appWrapper}>
+        <div className={`${styles.appWrapper} ${validInput ? '' : styles.invalidInput}`}>
             {apiError && (
                 <p>{apiError}</p>
             )}
             <h1>THINGS TO DO</h1>
-            <Form createTodo={createTodo} />
-            <RenderTodos todos={todos} updateTodo={updateTodo} />
-            <AppFooter todos={todos} />
-            <button onClick={() => createTodo("Task 2")} disabled={isCreatingTask}>{isCreatingTask ? "Loading" : "Create"}</button>
+            <Form isInputValid={setValidInput} createTodo={createTodo} />
+            <RenderTodos getTodos={getTodos} renderRule={renderRule} todos={todos} updateTodo={updateTodo} />
+            <AppFooter setRenderRule={setRenderRule} todos={todos} />
         </div>
+
     )
 }

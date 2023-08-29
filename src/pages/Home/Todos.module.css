@@ -1,0 +1,53 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.renderedTodos {
+    list-style: none;
+    padding-left: 0;
+}
+
+.todo {
+    width: 95%;
+    border-bottom: 2px solid rgba(211, 211, 211, 0.5);
+    margin: 0 auto;
+    padding: .5rem 0rem;
+    display: flex;
+}
+
+.todo__check {
+    margin-right: .6rem;
+    width: 1rem;
+}
+
+.todo__title {
+    font-family: inherit;
+    word-break: break-all;
+    width: 100%;
+    font-size: 1.2rem;
+    background-color: white;
+    border: none;
+    resize: none;
+}
+
+.icon {
+    cursor: pointer;
+    font-size: 1.2rem;
+    margin-left: .5rem;
+}
+
+.todo-form__edit {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.editBtn {
+    position: relative;
+}
+
+.focused {
+    border: 2px solid black;
+}

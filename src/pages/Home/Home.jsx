@@ -1,76 +1,38 @@
-import Form from "./NewTaskForm";
-import RenderTodos from "./Todos";
+import NewTaskForm from "./NewTaskForm";
+import Todos from "./Todos";
 import AppFooter from "./AppFooter";
 import styles from './Home.module.css'
 import { useEffect, useState } from "react";
-import axios from "axios";
-
-const apiDomain = "http://localhost:8000"
+import { APIFetcher } from "../../utils/APIFetcher";
+import { WarningModal } from "../../components/modals/WarningModal";
 
 export const Home = () => {
     const [todos, setTodos] = useState(null);
     const [renderRule, setRenderRule] = useState('all')
-    const [apiError, setApiError] = useState(null);
-    const [isCreatingTask, setIsCreatingTask] = useState(false);
     const [validInput, setValidInput] = useState(true)
+    const [showWarning, setShowWarning] = useState(false)
+    
+    const fetchTodos = async () => {
+        APIFetcher.getTodos(renderRule).then(
+            setTodos
+        ).catch((err) => {
+            console.log(err)
+        })
+    }
+
+    const updateTodos =  (todo, isChecked) => {
+        setTodos(APIFetcher.updateTodo(todo, isChecked, todos))
+    }
+
+    const createNewTodo = async (title) => {
+        APIFetcher.createTodo(title, todos).then(
+            setTodos
+        ).catch(err => console.log(err))
+    }
 
     useEffect(() => {
-        getTodos();
+        fetchTodos()
     }, [])
-
-    const createTodo = async (title) => {
-        setIsCreatingTask(true);
-        try {
-            const { data: { newTodo } } = await axios.post(`${apiDomain}/todo/create`, { title }, { withCredentials: true })
-
-            setTodos([...todos, newTodo])
-            setIsCreatingTask(false);
-        } catch (err) {
-            console.log({ err });
-            setApiError(err.response.data.msg);
-            setIsCreatingTask(false);
-        }
-    }
-
-    const getTodos = async () => {
-        try {
-            const { data } = await axios.get(`${apiDomain}/todo/all`, { withCredentials: true })
-            const todos = []
-            if (renderRule === 'completed') {
-                for (let dataPoint of data) {
-                    if (dataPoint.isCompleted) {
-                        todos.push(dataPoint)
-                    }
-                }
-            } else if (renderRule === 'active') {
-                for (let dataPoint of data) {
-                    if (!dataPoint.isCompleted) {
-                        todos.push(dataPoint)
-                    }
-                }
-            } else {
-                setTodos(data)
-                return
-            }
-            setTodos(todos)
-        } catch (err) {
-            console.log({ err });
-        }
-    }
-
-    const updateTodo = (todo, isChecked) => {
-        const newTodos = todos.map(t => {
-            if (t.id === todo.id) {
-                return {
-                    ...todo,
-                    isCompleted: isChecked,
-                }
-            } else {
-                return t
-            }
-        })
-        setTodos(newTodos)
-    }
 
     if (!todos) {
         return <h1>Loading</h1>
@@ -78,14 +40,15 @@ export const Home = () => {
 
     return (
         <div className={`${styles.appWrapper} ${validInput ? '' : styles.invalidInput}`}>
-            {apiError && (
-                <p>{apiError}</p>
-            )}
-            <h1>THINGS TO DO</h1>
-            <Form isInputValid={setValidInput} createTodo={createTodo} />
-            <RenderTodos getTodos={getTodos} renderRule={renderRule} todos={todos} updateTodo={updateTodo} />
+            <h1>Your First ToDo List</h1>
+            <NewTaskForm todos={todos} isInputValid={setValidInput} createTodo={createNewTodo} />
+            <Todos getTodos={fetchTodos} renderRule={renderRule} todos={todos} updateTodo={updateTodos} />
             <AppFooter setRenderRule={setRenderRule} todos={todos} />
+            <WarningModal
+             title={'Warning'} 
+             text={'Are You Sure You Want To Delete This Todo?'} 
+             btnText1={'Cancel'}
+             btnText2={'Delete'}/>
         </div>
-
     )
 }

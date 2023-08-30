@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styles from "./NewTaskForm.module.css";
 
-const NewTaskForm = ({ createTodo, isInputValid }) => {
+const NewTaskForm = ({ createTodo, isInputValid, todos }) => {
   const [inputValue, setInputValue] = useState("");
 
   const formSubmitHandler = (e) => {
@@ -9,15 +9,15 @@ const NewTaskForm = ({ createTodo, isInputValid }) => {
     console.log(e.target);
     if (e.target[0].value !== "") {
       setInputValue("");
-      createTodo(e.target[0].value)
+      createTodo(e.target[0].value, todos);
     } else {
-      isInputValid(false)
+      isInputValid(false);
     }
   };
 
   const inputChangeHandler = (e) => {
     setInputValue(e.target.value);
-    isInputValid(true)
+    isInputValid(true);
   };
 
   return (
